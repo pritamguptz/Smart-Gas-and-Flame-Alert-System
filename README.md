@@ -17,6 +17,8 @@ Features-
 * Real-time status display
 * Proteus simulation
 
+![Normal Condition](normal%20condition.png)
+
 Components Used-
 
 * Arduino Uno R3
@@ -29,18 +31,19 @@ Components Used-
 * LEDs
 * Proteus 8 Professional
 
-Pin Configuration--
+## Pin Configuration
 
-Component	Arduino Pin
-Gas Sensor	A0
-Flame Sensor	D2
-Gas LED	D6
-Flame LED	D7
-Indicator LED	D8
-Buzzer	D10
-Relay/Fan	D11
-OLED SDA	A4
-OLED SCL	A5
+| Component | Arduino Pin |
+|-----------|------------|
+| Gas Sensor | A0 |
+| Flame Sensor | D2 |
+| Gas LED | D6 |
+| Flame LED | D7 |
+| Indicator LED | D8 |
+| Buzzer | D10 |
+| Relay/Fan | D11 |
+| OLED SDA | A4 |
+| OLED SCL | A5 |
 
 Working Principle---
 
