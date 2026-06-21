@@ -1,0 +1,111 @@
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 64
+
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
+
+#define GAS_PIN A0
+#define FLAME_PIN 2
+
+#define GAS_LED 6
+#define FLAME_LED 7
+#define INDICATOR_LED 8
+
+#define BUZZER 10
+#define FAN 11
+
+int gasThreshold = 500;
+
+void setup() {
+
+pinMode(FLAME_PIN, INPUT);
+
+pinMode(GAS_LED, OUTPUT);
+pinMode(FLAME_LED, OUTPUT);
+pinMode(INDICATOR_LED, OUTPUT);
+pinMode(BUZZER, OUTPUT);
+pinMode(FAN, OUTPUT);
+
+digitalWrite(INDICATOR_LED, HIGH);
+
+Serial.begin(9600);
+
+if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
+while (1);
+}
+
+display.clearDisplay();
+display.setTextColor(SSD1306_WHITE);
+
+// Startup Screen
+display.setTextSize(1);
+display.setCursor(10, 15);
+display.println("SMART GAS &");
+
+display.setCursor(10, 30);
+display.println("FLAME ALERT SYSTEM");
+
+display.display();
+delay(1000);
+}
+
+void loop() {
+
+int gasValue = analogRead(GAS_PIN);
+int flameValue = digitalRead(FLAME_PIN);
+
+bool gasAlert = (gasValue > gasThreshold);
+bool flameAlert = (flameValue == HIGH);
+
+digitalWrite(GAS_LED, gasAlert);
+digitalWrite(FLAME_LED, flameAlert);
+
+if (gasAlert || flameAlert) {
+digitalWrite(BUZZER, HIGH);
+digitalWrite(FAN, HIGH);
+} else {
+digitalWrite(BUZZER, LOW);
+digitalWrite(FAN, LOW);
+}
+
+display.clearDisplay();
+
+display.setTextSize(1);
+
+display.setCursor(0, 0);
+display.println("SMART SAFETY MONITOR");
+
+display.drawLine(0, 10, 127, 10, SSD1306_WHITE);
+
+display.setCursor(0, 16);
+display.print("Gas Value: ");
+display.println(gasValue);
+
+display.setCursor(0, 30);
+display.print("Gas Status: ");
+if (gasAlert)
+display.println("ALERT");
+else
+display.println("SAFE");
+
+display.setCursor(0, 44);
+display.print("Flame: ");
+if (flameAlert)
+display.println("DETECTED");
+else
+display.println("NOT DETECTED");
+
+display.setCursor(0, 56);
+display.print("Fan: ");
+if (gasAlert || flameAlert)
+display.println("ON");
+else
+display.println("OFF");
+
+display.display();
+
+delay(300);
+}
